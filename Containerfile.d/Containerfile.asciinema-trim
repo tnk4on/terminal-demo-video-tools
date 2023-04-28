@@ -1,0 +1,11 @@
+FROM registry.fedoraproject.org/fedora:latest as prep
+ARG ARCH
+ENV ARCH ${ARCH:-arm64}
+ENV VERSION=0.1.2
+
+RUN curl -LO https://github.com/suzuki-shunsuke/asciinema-trim/releases/download/v${VERSION}/asciinema-trim_linux_${ARCH}.tar.gz
+RUN tar zxf asciinema-trim_linux_${ARCH}.tar.gz
+
+FROM registry.fedoraproject.org/fedora:latest
+COPY --from=prep asciinema-trim /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/asciinema-trim"]

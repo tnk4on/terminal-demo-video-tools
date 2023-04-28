@@ -1,0 +1,4 @@
+FROM registry.fedoraproject.org/fedora:latest
+
+RUN dnf -y update; dnf install ImageMagick -y; dnf -y clean all
+ENTRYPOINT ["/usr/bin/convert"]

@@ -1,0 +1,9 @@
+FROM registry.fedoraproject.org/fedora:latest as prep
+
+RUN dnf -y install https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
+RUN dnf -y install cargo
+RUN cargo install gifski --git https://github.com/ImageOptim/gifski
+
+FROM registry.fedoraproject.org/fedora:latest 
+COPY --from=prep /root/.cargo/bin/gifski /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/gifski"]

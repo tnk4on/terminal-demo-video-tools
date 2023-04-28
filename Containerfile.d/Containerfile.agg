@@ -1,0 +1,9 @@
+FROM registry.fedoraproject.org/fedora:latest as prep
+RUN dnf install cargo -y
+RUN cargo install --git https://github.com/asciinema/agg
+
+
+FROM registry.fedoraproject.org/fedora:latest 
+RUN dnf -y update; dnf install jetbrains-mono-fonts -y; dnf -y clean all
+COPY --from=prep /root/.cargo/bin/agg /usr/local/bin/
+ENTRYPOINT ["/usr/local/bin/agg"]
