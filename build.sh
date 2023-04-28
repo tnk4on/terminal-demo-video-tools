@@ -46,7 +46,7 @@ echo -e "\n### push to docker.io ###"
 for f in Containerfile*
 do
     echo -e "\n#### podman manifest push --all ${f/Containerfile./}:latest docker://${DOCKER}/${f/Containerfile./}:latest --format docker ###"
-    podman manifest push --all ${f/Containerfile./}:latest docker://${DOCKER}/${f/Containerfile./}:latest --format docker
+#    podman manifest push --all ${f/Containerfile./}:latest docker://${DOCKER}/${f/Containerfile./}:latest --format docker
 done
 
 ### Quay.io
@@ -54,5 +54,5 @@ echo -e "\n### push to quay.io ###"
 for f in Containerfile*
 do
     echo -e "\n#### podman manifest push --all ${f/Containerfile./}:latest docker://${QUAY}/${f/Containerfile./}:latest ####"
-    podman manifest push --all ${f/Containerfile./}:latest docker://${QUAY}/${f/Containerfile./}:latest
+#   podman manifest push --all ${f/Containerfile./}:latest docker://${QUAY}/${f/Containerfile./}:latest
 done
