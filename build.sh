@@ -11,7 +11,6 @@ podman login quay.io
 #export TAG=ffmpeg
 export DOCKER=docker.io/tnk4on
 export QUAY=quay.io/tnk4on
-export ENVFILE=env
 
 # Build all container images
 CURDIR=$PWD
@@ -19,23 +18,24 @@ cd Containerfile.d
 
 for f in Containerfile*
 do
-    echo -e "\n### Build multi-arch images for ${f/Containerfile./} ###"
+    TAG=${f/Containerfile./}
+    echo -e "\n### Build multi-arch images for ${TAG} ###"
     for ARCH in amd64 arm64
     do
-        echo -e "\n#### podman build -t ${f/Containerfile./}:${ARCH} -f $f --build-arg ARCH=${ARCH} --platform linux/${ARCH} --manifest ${f/Containerfile./} . ####"
-        podman build -t ${f/Containerfile./}:${ARCH} -f $f --build-arg ARCH=${ARCH} --platform linux/${ARCH} --manifest ${f/Containerfile./} .
+        echo -e "\n#### podman build -t ${TAG}:${ARCH} -f $f --build-arg ARCH=${ARCH} --platform linux/${ARCH} --manifest ${TAG} . ####"
+        podman build -t ${TAG}:${ARCH} -f $f --build-arg ARCH=${ARCH} --platform linux/${ARCH} --manifest ${TAG} .
     done
 done
 
 # Test
-
 for f in Containerfile*
 do
-    echo -e "\n### Run ${f/Containerfile./} ###"
+    TAG=${f/Containerfile./}
+    echo -e "\n### Run ${TAG} ###"
     for ARCH in amd64 arm64
     do
-        echo -e "\n#### podman run --rm ${f/Containerfile./}:${ARCH} --version ####"
-        podman run --rm ${f/Containerfile./}:${ARCH} --version
+        echo -e "\n#### podman run --rm ${TAG}:${ARCH} --version ####"
+        podman run --rm ${TAG}:${ARCH} --version
     done
 done
 
@@ -45,14 +45,16 @@ done
 echo -e "\n### push to docker.io ###"
 for f in Containerfile*
 do
-    echo -e "\n#### podman manifest push --all ${f/Containerfile./}:latest docker://${DOCKER}/${f/Containerfile./}:latest --format docker ###"
-#    podman manifest push --all ${f/Containerfile./}:latest docker://${DOCKER}/${f/Containerfile./}:latest --format docker
+    TAG=${f/Containerfile./}
+    echo -e "\n#### podman manifest push --all ${TAG}:latest docker://${DOCKER}/${TAG}:latest --format docker ###"
+    podman manifest push --all ${TAG}:latest docker://${DOCKER}/${TAG}:latest --format docker
 done
 
 ### Quay.io
 echo -e "\n### push to quay.io ###"
 for f in Containerfile*
 do
-    echo -e "\n#### podman manifest push --all ${f/Containerfile./}:latest docker://${QUAY}/${f/Containerfile./}:latest ####"
-#   podman manifest push --all ${f/Containerfile./}:latest docker://${QUAY}/${f/Containerfile./}:latest
+    TAG=${f/Containerfile./}
+    echo -e "\n#### podman manifest push --all ${TAG}:latest docker://${QUAY}/${TAG}:latest ####"
+   podman manifest push --all ${TAG}:latest docker://${QUAY}/${TAG}:latest
 done
