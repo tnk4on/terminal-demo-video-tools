@@ -1,14 +1,18 @@
+#
+# If you do not need to push container images, comment out the registry login settings and the push section
+#
+
 #!/bin/bash
 set -eu
 
-# Repository Login
+# Registry Login
 echo "### login to docker.io ###"
 podman login docker.io
 
 echo -e "\n### login to quay.io ###"
 podman login quay.io
 
-#export TAG=ffmpeg
+#　Set up for your Container Registry account
 export DOCKER=docker.io/tnk4on
 export QUAY=quay.io/tnk4on
 
@@ -40,7 +44,7 @@ do
 done
 
 
-# Push
+# Push to registry
 ## Docker.io
 echo -e "\n### push to docker.io ###"
 for f in Containerfile*
@@ -56,5 +60,8 @@ for f in Containerfile*
 do
     TAG=${f/Containerfile./}
     echo -e "\n#### podman manifest push --all ${TAG}:latest docker://${QUAY}/${TAG}:latest ####"
-   podman manifest push --all ${TAG}:latest docker://${QUAY}/${TAG}:latest
+    podman manifest push --all ${TAG}:latest docker://${QUAY}/${TAG}:latest
 done
+
+echo "done."
+cd $CURDIR
